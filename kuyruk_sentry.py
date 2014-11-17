@@ -2,8 +2,6 @@ import raven
 from kuyruk.events import task_failure
 
 
-__version__ = '1.0.0'
-
 CONFIG_KEYS = ["SENTRY_DSN"]
 
 
