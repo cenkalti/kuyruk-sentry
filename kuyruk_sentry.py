@@ -7,7 +7,7 @@ import raven
 from kuyruk import signals
 
 
-CONFIG_KEYS = ["SENTRY_DSN"]
+CONFIG = {"SENTRY_DSN": None}
 
 
 class Sentry(object):

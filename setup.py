@@ -13,7 +13,7 @@ setup(
         'kuyruk>=2.0.0',
         'raven>=5.1.1',
     ],
-    entry_points={'kuyruk.config': 'sentry = kuyruk_sentry:CONFIG_KEYS'},
+    entry_points={'kuyruk.config': 'sentry = kuyruk_sentry:CONFIG'},
     description='Sends exceptions in Kuyruk workers to Sentry.',
     long_description=open('README.md').read(),
 )
