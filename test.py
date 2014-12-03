@@ -31,7 +31,7 @@ class SentryTestCase(unittest.TestCase):
         desc = error._get_description(args, kwargs, queue)
 
         message = mock.Mock()
-        w = kuyruk.Worker(c, Args(queue, False))
+        w = kuyruk.Worker(k, Args(queue, False))
         w._process_task(message, desc, error, args, kwargs)
 
         assert s.client.captureException.called

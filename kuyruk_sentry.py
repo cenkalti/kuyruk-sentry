@@ -17,8 +17,7 @@ class Sentry(object):
         signals.worker_failure.connect(
             self.capture_exception, sender=kuyruk, weak=False)
 
-    def capture_exception(self, sender, description, task, args, kwargs,
-                          exc_info, worker):
+    def capture_exception(self, sender, description, exc_info, worker, **extra):
         self.client.captureException(exc_info, extra={
             "description": description,
             "worker_queue": worker.queue,
