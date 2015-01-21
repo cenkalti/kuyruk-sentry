@@ -10,7 +10,7 @@ setup(
     url='https://github.com/cenkalti/kuyruk-sentry',
     py_modules=["kuyruk_sentry"],
     install_requires=[
-        'kuyruk>=2.0.0',
+        'kuyruk>=3.0.0',
         'raven>=5.1.1',
     ],
     entry_points={'kuyruk.config': 'sentry = kuyruk_sentry:CONFIG'},
