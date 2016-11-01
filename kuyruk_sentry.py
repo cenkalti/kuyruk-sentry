@@ -23,7 +23,7 @@ class Sentry(object):
     def capture_exception(self, sender, description, exc_info, worker, **extra):
         sentry_id = self.client.get_ident(self.client.captureException(exc_info, extra={
             "description": description,
-            "worker_queue": worker.queue,
+            "worker_queues": worker.queues,
             "worker_hostname": socket.gethostname(),
             "worker_pid": os.getpid(),
             "worker_cmd": ' '.join(sys.argv),
