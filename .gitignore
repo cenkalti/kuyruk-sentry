@@ -1,0 +1,6 @@
+*.pyc
+*.pyo
+/Kuyruk_Sentry.egg-info/
+.vscode/
+/build
+/dist
