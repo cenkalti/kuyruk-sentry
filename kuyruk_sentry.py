@@ -38,12 +38,10 @@ class Sentry(object):
                 scope.set_extra(key, value)
             sentry_id = sentry_sdk.capture_exception(exc_info)
         description["sentry_id"] = sentry_id
-        # existence of sentry_id means exception is accepted by sentry
-        if sentry_id:
-            self.on_exception.send(
-                sender,
-                description=description,
-                exc_info=exc_info,
-                worker=worker,
-                queue=queue,
-                **extra)
+        self.on_exception.send(
+            sender,
+            description=description,
+            exc_info=exc_info,
+            worker=worker,
+            queue=queue,
+            **extra)
