@@ -24,22 +24,22 @@ Args.__new__.__defaults__ = (None,) * len(Args._fields)
 
 
 class SentryTestCase(unittest.TestCase):
-    def test_init(self):
-        sentry_sdk.init = mock.Mock()
-        try:
-            kuyruk_sentry.Sentry(k)
-        except sentry_sdk.utils.BadDsn:
-            pass
+    @mock.patch('sentry_sdk.Client', autospec=True)
+    @mock.patch('sentry_sdk.Scope', autospec=True)
+    @mock.patch('sentry_sdk.Hub', autospec=True)
+    def test_init(self, mock_hub, mock_scope, mock_client):
 
-        assert sentry_sdk.init.called
+        kuyruk_sentry.Sentry(k)
 
-    def test_save_exception(self):
-        sentry_sdk.capture_exception = mock.Mock()
+        assert mock_client.called
+        assert mock_scope.called
+        assert mock_hub.called
 
-        try:
-            kuyruk_sentry.Sentry(k)
-        except sentry_sdk.utils.BadDsn:
-            pass
+    @mock.patch('sentry_sdk.Client', autospec=True)
+    @mock.patch.object(sentry_sdk.Hub, 'capture_exception', autospec=True)
+    def test_save_exception(self, mock_capture_exception, mock_client):
+
+        kuyruk_sentry.Sentry(k)
 
         queues = "kuyruk"
         args, kwargs = (), {}
@@ -52,4 +52,4 @@ class SentryTestCase(unittest.TestCase):
         w = kuyruk.Worker(k, Args(queues, False))
         w._process_task(message, desc, error, args, kwargs)
 
-        assert sentry_sdk.capture_exception.called
+        assert mock_capture_exception.called
