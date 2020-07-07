@@ -16,6 +16,7 @@ setup(
     entry_points={'kuyruk.config': 'sentry = kuyruk_sentry:CONFIG'},
     description='Sends exceptions in Kuyruk workers to Sentry.',
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
