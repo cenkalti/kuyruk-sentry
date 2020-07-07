@@ -14,10 +14,7 @@ class Sentry(object):
     def __init__(self, kuyruk):
         kuyruk.extensions["sentry"] = self
         scope = sentry_sdk.Scope()
-        try:
-            client = sentry_sdk.Client(kuyruk.config.SENTRY_DSN)
-        except sentry_sdk.utils.BadDsn:
-            raise
+        client = sentry_sdk.Client(kuyruk.config.SENTRY_DSN)
         self.hub = sentry_sdk.Hub(client, scope)
         self.on_exception = blinker.Signal()
         signals.worker_failure.connect(

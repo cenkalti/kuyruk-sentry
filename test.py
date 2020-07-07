@@ -38,7 +38,6 @@ class SentryTestCase(unittest.TestCase):
     @mock.patch('sentry_sdk.Client', autospec=True)
     @mock.patch.object(sentry_sdk.Hub, 'capture_exception', autospec=True)
     def test_save_exception(self, mock_capture_exception, mock_client):
-
         kuyruk_sentry.Sentry(k)
 
         queues = "kuyruk"
