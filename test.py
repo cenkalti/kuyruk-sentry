@@ -1,15 +1,12 @@
 import unittest
+import unittest.mock
 from collections import namedtuple
-
-import mock
 
 import kuyruk
 import kuyruk_sentry
 import sentry_sdk
 
 c = kuyruk.Config()
-c.SENTRY_DSN = "..."
-
 k = kuyruk.Kuyruk(c)
 
 
@@ -19,36 +16,40 @@ def error():
 
 
 Args = namedtuple("Args", ["queues", "local", "logging_level",
-                           "max_run_time", "max_load"])
+                           "max_run_time", "max_load", "priority"])
 Args.__new__.__defaults__ = (None,) * len(Args._fields)
 
 
 class SentryTestCase(unittest.TestCase):
-    @mock.patch('sentry_sdk.Client', autospec=True)
-    @mock.patch('sentry_sdk.Scope', autospec=True)
-    @mock.patch('sentry_sdk.Hub', autospec=True)
-    def test_init(self, mock_hub, mock_scope, mock_client):
-
-        kuyruk_sentry.Sentry(k)
-
-        assert mock_client.called
-        assert mock_scope.called
-        assert mock_hub.called
-
-    @mock.patch('sentry_sdk.Client', autospec=True)
-    @mock.patch.object(sentry_sdk.Hub, 'capture_exception', autospec=True)
-    def test_save_exception(self, mock_capture_exception, mock_client):
+    @unittest.mock.patch('kuyruk_sentry.sentry_sdk.capture_exception')
+    def test_save_exception(self, mock_capture_exception):
         kuyruk_sentry.Sentry(k)
 
         queues = "kuyruk"
         args, kwargs = (), {}
         desc = error._get_description(args, kwargs)
 
-        message = mock.Mock(
+        message = unittest.mock.Mock(
             delivery_info={'routing_key': None},
-            channel=mock.Mock()
+            channel=unittest.mock.Mock()
         )
         w = kuyruk.Worker(k, Args(queues, False))
         w._process_task(message, desc, error, args, kwargs)
 
-        assert mock_capture_exception.called
+        mock_capture_exception.assert_called_once()
+
+        mock_args = mock_capture_exception.call_args.args
+        mock_kwargs = mock_capture_exception.call_args.kwargs
+
+        (exc_type, exc, traceback) = mock_args[0]
+        assert exc_type == ZeroDivisionError
+
+        keys = {
+            'description',
+            'queue',
+            'worker_hostname',
+            'worker_pid',
+            'worker_cmd',
+            'worker_timestamp',
+        }
+        assert set(mock_kwargs['extras'].keys()) <= keys
