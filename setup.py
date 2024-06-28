@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="Kuyruk-Sentry",
-    version="1.1.4",
+    version="1.1.5",
     author="Cenk Altı",
     author_email="cenkalti@gmail.com",
     keywords="kuyruk sentry",
