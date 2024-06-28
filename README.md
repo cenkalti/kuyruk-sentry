@@ -11,13 +11,14 @@ Sends exceptions in Kuyruk workers to Sentry.
 ```python
 from kuyruk import Kuyruk, Config
 from kuyruk_sentry import Sentry
+import sentry_sdk
+
+sentry_sdk.init(dsn="...")  # configure Sentry
 
 config = Config()
-config.KUYRUK_SENTRY_DSN = "..."
+kuyruk = Kuyruk(config)
 
-kuyruk = kuyruk.Kuyruk(config)
-
-s = Sentry(k)
+s = Sentry(kuyruk)
 
 @kuyruk.task
 def oops():
